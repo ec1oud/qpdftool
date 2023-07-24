@@ -1,5 +1,5 @@
 QT -= gui
-QT += pdf pdf-private
+QT += pdf pdf-private core-private
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
