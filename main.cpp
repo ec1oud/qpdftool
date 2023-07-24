@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QPdfDocument>
-#include <QtPdf/private/qpdflinkmodel_p.h>
+#include <QPdfLinkModel>
 #include <QUrl>
 
 int main(int argc, char *argv[])
