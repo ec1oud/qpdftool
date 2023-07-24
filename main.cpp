@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     // An option with a value
     QCommandLineOption withWhat(QStringList() << "w" << "find-files-with",
-                                QCoreApplication::translate("main", "Find PDF files in CWD with <feature>, which can be 'links' or 'non-numeric-page-labels'"),
+                                QCoreApplication::translate("main", "Find PDF files in CWD with <feature>, which can be 'links' 'non-numeric-page-labels' or 'untrimmed-page-labels'"),
                                 QCoreApplication::translate("main", "feature"));
     parser.addOption(withWhat);
 
@@ -35,7 +35,8 @@ int main(int argc, char *argv[])
     enum LookFor {
         LFNone,
         LFLinks,
-        LFNonNumericPageLabels
+        LFNonNumericPageLabels,
+        LFUntrimmedPageLabels
     };
 
     LookFor lf = LFNone;
@@ -45,6 +46,8 @@ int main(int argc, char *argv[])
             lf = LFLinks;
         else if (withWhatFeature == "non-numeric-page-labels")
             lf = LFNonNumericPageLabels;
+        else if (withWhatFeature == "untrimmed-page-labels")
+            lf = LFUntrimmedPageLabels;
         else {
             qFatal() << "unknown feature" << withWhatFeature;
             return -2;
@@ -93,6 +96,18 @@ int main(int argc, char *argv[])
                 }
                 if (!nnpl.isEmpty())
                     qDebug() << fi.filePath() << "has" << doc.pageCount() << "pages: the non-numeric ones are" << nnpl;
+                break;
+            }
+            case LFUntrimmedPageLabels: {
+                QStringList upl;
+                const int pc = doc.pageCount();
+                for (int i = 0; i < pc; ++i) {
+                    QString l = doc.pageLabel(i);
+                    if (l.trimmed() != l)
+                        upl << l;
+                }
+                if (!upl.isEmpty())
+                    qDebug() << fi.filePath() << "has" << doc.pageCount() << "pages: the untrimmed labels are" << upl;
                 break;
             }
             case LFNone:
